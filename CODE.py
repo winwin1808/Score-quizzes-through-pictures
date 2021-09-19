@@ -53,26 +53,12 @@ def threshold_img(img):
   return thresh
 
 def crop_per_part(img,part):
-  dis = 75
-  xa= 6
-  h = 161
-  if part == 1:
-    img_crop = img[(h+(dis*(part-1))):(h+(dis*part)),150:275]
+  split = [0,161,241,321,401,478,558]
+  if 0 < part < 7:
+    img_crop = img[(split[part]):(split[part]+70),150:275]
     return img_crop
-  elif 1 < part < 6:
-    img_crop = img[(h+(dis*(part-1))+xa):(h+(dis*part)+xa),150:275]  
-    return img_crop
-  elif part == 6:
-    img_crop = img[(h+(dis*(part-1))+xa+10):(h+(dis*part)+xa+10),150:275]  
-    return img_crop 
-  elif part == 7:
-    img_crop = img[(h+(dis*(part-7))):(h+(dis*(part-6))),350:475]
-    return img_crop
-  elif 7 < part < 12:
-    img_crop = img[(h+(dis*(part-7))+xa):(h+(dis*(part-6))+xa),350:475]
-    return img_crop
-  elif part == 12:
-    img_crop = img[(h+(dis*(part-7))+xa+15):(h+(dis*(part-6))+xa+15),350:475]
+  elif 6 < part < 13:
+    img_crop = img[(split[part-6]):(split[part-6]+70),350:475] 
     return img_crop
   else:
     return img
