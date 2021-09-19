@@ -188,7 +188,7 @@ def correct_questions():
 ########################################################################
 # Ex2: Create CSV file:
 df_info = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
-df_info.to_csv('student_INFO.csv', index=False, sep=';')
+df_info.to_csv('student_INFO.csv')
 ########################################################################
 #Ex3: Generating the first 5 answers of one student:
 def first_five():
