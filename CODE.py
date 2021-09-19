@@ -8,7 +8,7 @@ import numpy as np
 character_table = ['A', 'B', 'C', 'D', 'E']
 answer_per_question = 5 
 questions_per_part = 5
-total_parts = 6
+total_parts = 12
 ques_each_side = 30
 total_question = 60
 
@@ -72,10 +72,10 @@ def grid():
       _grid[i].append(0)
   return _grid
 
-def write_csv_file(): 
+def write_csv_file(part = None): 
   if len(student_data_list) == 0: 
     return False
-  students = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
+  students = pd.DataFrame(student_data_list[part], columns=['Student ID','Name','Test Code'])
   students.to_csv('student.csv', index=False, sep=';')
 
 def threshold_img(img):
@@ -85,12 +85,15 @@ def threshold_img(img):
 
 def crop_per_part(img,part):
   # img_copy = img.copy()
-  part = int(part)
+  
   dis = 70
   xa= 10
   h = 237
   # print(dis)
   # return crop_img_right
+  # if first_five:
+  #   img_crop = img[(h+int(dis*(part-1))):(h+int(dis*part)),150:275]
+  #   return img_crop
   if part == 1:
     img_crop = img[(h+int(dis*(part-1))):(h+int(dis*part)),150:275]
     return img_crop
@@ -149,15 +152,42 @@ def grading(index,answer):
 def score_show(grading):
   score = (sum(grading)/questions_per_part)*100
   return score
-# boxes = img_list[0].copy()
-boxes = split_image(threshold_img(crop_per_part(img_list[0],1)))
-# cv2.imshow('Test',boxes[20])
-Pixel_value = check_answer(boxes)
-index = find_index(Pixel_value)
-grading(index,ANSWER_KEY)
-print(score_show(grading))
+# # boxes = img_list[0].copy()
+# boxes = split_image(threshold_img(crop_per_part(img_list[0],1)))
+# # cv2.imshow('Test',boxes[20])
+# Pixel_value = check_answer(boxes)
+# index = find_index(Pixel_value)
+# grading(index,ANSWER_KEY)
+# print(score_show(grading))
+
+def get_answer(image):
+  answer_index = []
+  # images = list()
+
+  for x in range (1,13):
+    thres = threshold_img(crop_per_part(image,x))
+    boxes = split_image (thres)
+    pixel_value = check_answer(boxes)
+    index = find_index(pixel_value)
+    
+  return answer_index
+
+answer = cv2.imread( 'DATA/'+ '20012311_TranDuc_3A.png')
+# print(get_answer(answer))
+get_answer(answer)
 
 # boxes = split_image(threshold_img(crop_per_part(img_list[0]),1))
 # answer_check(crop_per_part(img_list[0],21))
 # show_images(['Part_1'], [threshold_img(crop_per_part(img_list[0],1))])
-cv2.waitKey(0)
+# cv2.waitKey(0)
+# write_csv_file()
+########################################################################
+# Ex2: Create CSV file:
+write_csv_file()
+########################################################################
+#Ex3: Generating the first 5 answers of one student:
+def first_five():
+  boxes = split_image(threshold_img(crop_per_part(img_list[0]),1))
+  pixel_value = check_answer(boxes)
+  index = find_index(pixel_value)
+  answer_index.append(index) 
