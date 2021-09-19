@@ -188,7 +188,7 @@ def correct_questions():
 ########################################################################
 # Ex2: Create CSV file:
 df_info = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
-df_info.to_csv('student_INFO.csv')
+# df_info.to_csv('student_INFO.csv')
 ########################################################################
 #Ex3: Generating the first 5 answers of one student:
 def first_five():
@@ -236,7 +236,7 @@ def grading_csv():
   frame = [df_ID,df_Score]
   grading = pd.concat(frame,axis=1)
   grading.to_csv('grading.csv')
-grading_csv()
+# grading_csv()
 ########################################################################
 #Ex6: Summary which 3 questions are the most 
 
@@ -247,9 +247,9 @@ def final_result():
   all_result = list()
   for i in range (0,len(img_list)):
     if conv_correct_questions[i]>8:
-      all_result.append(print('Pass'))
+      all_result.append('Pass')
     else:
-      all_result.append(print('Fail'))
+      all_result.append('Fail')
   return all_result
 
 def result_csv():

@@ -1,14 +1,14 @@
 ,Student ID,Name,Test Code,Score,Result
-0,20012311,Test10,3A,10.00,
-1,20012312,QuyLan,3A,2.17,
-2,20012313,HoangGiaUy,3A,1.67,
-3,20012317,NguyenQuangHao,3A,8.17,
-4,20012318,NguyenVanC,3A,2.17,
-5,20012319,NguyenThiNo,3A,2.17,
-6,20012432,LeTriTue,3A,2.83,
-7,20021350,NguyenNgocBao,3A,3.00,
-8,20031255,NguyenThanhHai,3A,3.00,
-9,20031765,PhamNgocHao,3A,3.67,
-10,20031898,NguyenTuanHung,3A,3.50,
-11,20032521,DoManhDung,3A,2.83,
-12,20033122,LeKhanhDuong,3A,2.83,
+0,20012311,Test10,3A,10.00,Pass
+1,20012312,QuyLan,3A,2.17,Fail
+2,20012313,HoangGiaUy,3A,1.67,Fail
+3,20012317,NguyenQuangHao,3A,8.17,Pass
+4,20012318,NguyenVanC,3A,2.17,Fail
+5,20012319,NguyenThiNo,3A,2.17,Fail
+6,20012432,LeTriTue,3A,2.83,Fail
+7,20021350,NguyenNgocBao,3A,3.00,Fail
+8,20031255,NguyenThanhHai,3A,3.00,Fail
+9,20031765,PhamNgocHao,3A,3.67,Fail
+10,20031898,NguyenTuanHung,3A,3.50,Fail
+11,20032521,DoManhDung,3A,2.83,Fail
+12,20033122,LeKhanhDuong,3A,2.83,Fail
