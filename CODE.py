@@ -17,6 +17,9 @@ green = (0, 255, 0) # green color
 red = (0, 0, 255) # red color
 white = (255, 255, 255) # white color
 
+width = 596
+height = 842
+
 #################################
 # Import data
 
@@ -35,7 +38,7 @@ path = glob.glob("DATA/*.png")
 
 for name in path: 
   img = cv2.imread(name)
-  # img = cv2.resize(img, (width, height))
+  img = cv2.resize(img, (width, height))
   # img = img[70:,:]
   img_list.append(img)
   
@@ -65,17 +68,17 @@ def generateColumns():
   return columns
 
 def grid(): 
-  _grid = [] 
+  grid = [] 
   for i in range(total_question): 
-    _grid.append([])
+    grid.append([])
     for j in range(answer_per_question): 
-      _grid[i].append(0)
-  return _grid
+      grid[i].append(0)
+  return grid
 
-def write_csv_file(part = None): 
+def write_csv_file(): 
   if len(student_data_list) == 0: 
     return False
-  students = pd.DataFrame(student_data_list[part], columns=['Student ID','Name','Test Code'])
+  students = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
   students.to_csv('student.csv', index=False, sep=';')
 
 def threshold_img(img):
@@ -84,16 +87,12 @@ def threshold_img(img):
   return thresh
 
 def crop_per_part(img,part):
-  # img_copy = img.copy()
-  
+
+  part = int(part)
   dis = 70
   xa= 10
   h = 237
-  # print(dis)
-  # return crop_img_right
-  # if first_five:
-  #   img_crop = img[(h+int(dis*(part-1))):(h+int(dis*part)),150:275]
-  #   return img_crop
+  
   if part == 1:
     img_crop = img[(h+int(dis*(part-1))):(h+int(dis*part)),150:275]
     return img_crop
@@ -133,15 +132,18 @@ def check_answer(boxes):
   return myPixelVal    
 
 def find_index(myPixelVal):
-  index = []
+  index = list()
+
   for x in range (0,questions_per_part):
     arr = myPixelVal[x]
     index_value = np.where(arr == np.amax(arr))
     index.append(index_value[0][0])
-  return index  
+    str(index)
+  return index
 
 def grading(index,answer):
   grading = []
+  
   for x in range (0,questions_per_part):
     if answer[x] == index[x]:
       grading.append(1)
@@ -160,34 +162,68 @@ def score_show(grading):
 # grading(index,ANSWER_KEY)
 # print(score_show(grading))
 
-def get_answer(image):
-  answer_index = []
-  # images = list()
-
-  for x in range (1,13):
-    thres = threshold_img(crop_per_part(image,x))
+def get_answer(i):
+  answer = cv2.imread('-VNUK-Challenge_2_HAO_UY/ANSWER/3A.png')
+  answer_key = []
+  x = 1
+  while x < 13:
+    thres = threshold_img(crop_per_part(answer,x))
     boxes = split_image (thres)
     pixel_value = check_answer(boxes)
     index = find_index(pixel_value)
-    
-  return answer_index
+    answer_key.append(index)
+    str(answer_key)
+    x += 1  
+  # answer_key = np.hstack(answer_key)
+  # answer_key = np.hstack(answer_key)
+  return answer_key[i]
 
-answer = cv2.imread( 'DATA/'+ '20012311_TranDuc_3A.png')
-# print(get_answer(answer))
-get_answer(answer)
 
+# print(get_answer(1))
+# img = cv2.imread('-VNUK-Challenge_2_HAO_UY/ANSWER/3A.png') 
+# cv2.imshow('answer',img)
+# cv2.waitKey(0)
 # boxes = split_image(threshold_img(crop_per_part(img_list[0]),1))
 # answer_check(crop_per_part(img_list[0],21))
 # show_images(['Part_1'], [threshold_img(crop_per_part(img_list[0],1))])
-# cv2.waitKey(0)
+
 # write_csv_file()
 ########################################################################
 # Ex2: Create CSV file:
-write_csv_file()
+# write_csv_file()
 ########################################################################
 #Ex3: Generating the first 5 answers of one student:
-def first_five():
-  boxes = split_image(threshold_img(crop_per_part(img_list[0]),1))
-  pixel_value = check_answer(boxes)
-  index = find_index(pixel_value)
-  answer_index.append(index) 
+def test_graded():
+  grade_ = []
+  x = 1
+  while x < 13:
+    answer_index = []
+    thres = threshold_img(crop_per_part(img_list[4],x))
+    boxes = split_image (thres)
+    pixel_value = check_answer(boxes)
+    index = find_index(pixel_value)
+    answer_index.append(index)
+    grade = grading(answer_index[0],get_answer(x-1))
+    grade_.append(grade)
+    x +=1
+  # answer_index = np.concatenate(answer_index)
+  # grade = grading(answer_index,get_answer())
+  score = score_show(grade)
+  return score
+#################################
+# answer_index = []
+# thres = threshold_img(crop_per_part(img,1))
+# boxes = split_image (thres)
+# pixel_value = check_answer(boxes)
+# index = find_index(pixel_value)
+# answer_index.append(index)
+# grade = grading(answer_index[0],get_answer(0))
+# # grade = grading(answer_index,get_answer(0))
+# print(answer_index[0])
+# print(get_answer(0))
+# print(grade)
+# print(score_show(grade))
+print(test_graded())
+
+  
+  
