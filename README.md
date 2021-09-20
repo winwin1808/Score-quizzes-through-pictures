@@ -21,4 +21,4 @@
 * import imutils
 * import numpy as np
 * import os.path
-* os.chdir("YOUR_PATH")
+
