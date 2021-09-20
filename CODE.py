@@ -1,8 +1,6 @@
 import cv2
 import pandas as pd 
-import matplotlib.pyplot as plt
 import glob
-import imutils
 import numpy as np
 import os.path
 ##################################
@@ -23,7 +21,6 @@ images = [os.path.basename(x) for x in glob.glob("-VNUK-Challenge_2_HAO_UY/DATA/
 for name in images: 
   img = cv2.imread('-VNUK-Challenge_2_HAO_UY/DATA/'+ name)
   img = cv2.resize(img, (width, height)) 
-  # img = img[70:,:]
   img_list.append(img)
   
   name = name.replace('.png', '').split('_')
@@ -145,7 +142,7 @@ def process_chars(index):
 ########################################################################
 # Ex2: Create CSV file:
 df_info = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
-# df_info.to_csv('student_INFO.csv')
+df_info.to_csv('student_INFO.csv')
 ########################################################################
 #Ex3: Generating the first 5 answers of one student:
 def first_five():
@@ -164,7 +161,7 @@ def first_five():
   # score = score_show(grade)
   print('The first 5 answers of the first student:')
   print(str(char))
-# first_five()
+first_five()
 ######################################################################## 
 # Ex4: Generating all answers of one student:
 def all_answer():
@@ -182,7 +179,7 @@ def all_answer():
 
   print('All answers of the first student:')
   print(str(char))
-# all_answer()
+all_answer()
 
 ######################################################################## 
 #Ex5: Generating grading.csv
@@ -199,7 +196,7 @@ def grading_csv():
   frame = [df_ID,df_Score]
   grading = pd.concat(frame,axis=1)
   grading.to_csv('grading.csv')
-# grading_csv()
+grading_csv()
 ########################################################################
 #Ex6: Summary which 3 questions are the most 
 def all_answer(img_index):
@@ -216,7 +213,6 @@ def all_answer(img_index):
     x +=1
   answer_index = np.concatenate(answer_index) 
   return answer_index
-# print(all_answer(2)[1])
 
 def get_answer_all():
   answer = cv2.imread('-VNUK-Challenge_2_HAO_UY/ANSWER/3A.png')
@@ -249,8 +245,10 @@ def print_diff():
     total_wrong.append(check_wrong(i))
   total_wrong = np.concatenate(total_wrong)
   (counts,unique) = np.unique(total_wrong, return_counts=True)
-  unique.sort()
-  print(unique)
+  diff = np.vstack((counts,unique)).T
+  df_diff = pd.DataFrame(diff,columns=['Question','Student Wrong'])
+  df_diff = pd.DataFrame.sort_values(df_diff,by='Student Wrong',ascending = False)
+  print(df_diff.head(3)) 
 print_diff() 
 ########################################################################
 #Ex7: Generating the final result (pass/fail) of the class
@@ -275,5 +273,4 @@ def result_csv():
   frame = [df_info, df_Score, df_Result]
   df_final = pd.concat(frame,axis=1)
   df_final.to_csv('Final Result.csv')
-# result_csv()
-      
+result_csv()
