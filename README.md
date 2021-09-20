@@ -14,10 +14,10 @@
 
 ## **Libraries used in the code file:**
 
-import cv2/
-import pandas as pd/ 
-import glob/
-import imutils,
-import numpy as np,
-import os.path,
+1. import cv2
+2. import pandas as pd 
+3. import glob
+4. import imutils
+5. import numpy as np
+6. import os.path
 
