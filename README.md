@@ -14,9 +14,9 @@
 
 ## **Libraries used in the code file:**
 
-import cv2,
-import pandas as pd, 
-import glob,
+import cv2/
+import pandas as pd/ 
+import glob/
 import imutils,
 import numpy as np,
 import os.path,
