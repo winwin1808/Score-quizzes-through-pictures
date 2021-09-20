@@ -1,4 +1,4 @@
-# -VNUK-Challenge_2_HAO_UY
+## -VNUK-Challenge_2_HAO_UY
 
 * **Ex2: From the Data folder, generating student.csv         -> student_INFO.csv**
 
@@ -12,7 +12,7 @@
 
 * **Test.py** is our file to transform image but it's not needed in this case.
 
-* **Libraries used in the code file:**
+## **Libraries used in the code file:**
 
 * import cv2
 * import pandas as pd 
