@@ -11,3 +11,14 @@
 #**Code.ipynb** is the file where we display the printed results.
 
 #**Test.py** is our file to transform image but it's not needed in this case.
+
+#**Libraries used in the code file:**
+
+import cv2
+import pandas as pd 
+import matplotlib.pyplot as plt
+import glob
+import imutils
+import numpy as np
+import os.path
+os.chdir("YOUR_PATH")
