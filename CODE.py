@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import glob
 import imutils
 import numpy as np
-import os
+import os.path
 
 chars = ['A', 'B', 'C', 'D', 'E']
 answer_per_question = 5 
@@ -23,65 +23,29 @@ height = 842
 
 #################################
 # Import data
-
-# data = ['DATA/'+ 
-# '20012311_TranDuc_3A.png',
-# '20012312_QuyLan_3A.png',
-# '20012313_HoangGiaUy_3A.png',
-# '20012317_NguyenQuangHao_3A.png',
-# '20012318_NguyenVanC_3A.png',
-# '20012319_NguyenThiNo_3A.png']
-
 img_list = list()
 student_data_list = list()
 
-path = glob.glob("DATA/*.png")
-
-for name in path: 
-  img = cv2.imread(name)
-  img = cv2.resize(img, (width, height))
+# images = glob.glob("DATA/*.png")
+images = [os.path.basename(x) for x in glob.glob("-VNUK-Challenge_2_HAO_UY/DATA/*.png")]
+for name in images: 
+  img = cv2.imread('-VNUK-Challenge_2_HAO_UY/DATA/'+ name)
+  img = cv2.resize(img, (width, height)) 
   # img = img[70:,:]
   img_list.append(img)
   
-  name = name.replace('.png', '')
-  name = name.replace( 'DATA\ ','').split('_')
-  student = [name[0], name[1], name[2]]  
+  name = name.replace('.png', '').split('_')
+  student = [name[0], name[1], name[2]]
   student_data_list.append(name)
 
 ################################
 
-ANSWER_KEY = {0: 2, 1: 1, 2: 2, 3: 3, 4: 1}
-
 def show_images(titles, images, wait=True):
-    """Display multiple images with one line of code"""
-
     for (title, image) in zip(titles, images):
         cv2.imshow(title, image)
-
     if wait:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-
-def generateColumns(): 
-  columns = ['Student ID','Name','Test Code']
-  for i in range(total_question): 
-    columns.append('Question: '+str((i+1)))
-  columns.append('Score')
-  return columns
-
-def grid(): 
-  grid = [] 
-  for i in range(total_question): 
-    grid.append([])
-    for j in range(answer_per_question): 
-      grid[i].append(0)
-  return grid
-
-def write_csv_file(): 
-  if len(student_data_list) == 0: 
-    return False
-  students = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
-  students.to_csv('student.csv', index=False, sep=';')
 
 def threshold_img(img):
   gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -89,23 +53,12 @@ def threshold_img(img):
   return thresh
 
 def crop_per_part(img,part):
-
-  part = int(part)
-  dis = 70
-  xa= 10
-  h = 237
-  
-  if part == 1:
-    img_crop = img[(h+int(dis*(part-1))):(h+int(dis*part)),150:275]
+  split = [0,161,241,321,401,478,558]
+  if 0 < part < 7:
+    img_crop = img[(split[part]):(split[part]+70),150:275]
     return img_crop
-  elif 1 < part < 7:
-    img_crop = img[(h+int(dis*(part-1))+xa):(h+int(dis*part)+xa),150:275]  
-    return img_crop
-  elif part == 7:
-    img_crop = img[(h+int(dis*(part-7))):(h+int(dis*(part-6))),350:475]
-    return img_crop
-  elif 6 < part < 14:
-    img_crop = img[(h+int(dis*(part-7))+xa):(h+int(dis*(part-6))+xa),350:475]
+  elif 6 < part < 13:
+    img_crop = img[(split[part-6]):(split[part-6]+70),350:475] 
     return img_crop
   else:
     return img
@@ -114,7 +67,6 @@ def split_image(image):
     rows = np.vsplit(image,questions_per_part)
     boxes = []
     for row in rows:
-        # split each row vertically (column-wise)
         cols = np.hsplit(row, answer_per_question)  
         for box in cols:  
             boxes.append(box)
@@ -144,7 +96,6 @@ def find_index(myPixelVal):
 
 def grading(index,answer):
   grading = []
-  
   for x in range (0,questions_per_part):
     if answer[x] == index[x]:
       grading.append(1)
@@ -153,30 +104,50 @@ def grading(index,answer):
   return grading
 
 def score_show(grading):
-  score = (sum(grading)/questions_per_part)*100
+  score = (sum(grading)/total_question)*10
+  score = "%.2f" % score
   return score
-# # boxes = img_list[0].copy()
-# boxes = split_image(threshold_img(crop_per_part(img_list[0],1)))
-# # cv2.imshow('Test',boxes[20])
-# Pixel_value = check_answer(boxes)
-# index = find_index(Pixel_value)
-# grading(index,ANSWER_KEY)
-# print(score_show(grading))
 
 def get_answer(i):
   answer = cv2.imread('-VNUK-Challenge_2_HAO_UY/ANSWER/3A.png')
   answer_key = []
   x = 1
   while x < 13:
-    thres = threshold_img(crop_per_part(answer,x))
+    image = crop_per_part(answer,x)
+    thres = threshold_img(image)
     boxes = split_image (thres)
     pixel_value = check_answer(boxes)
     index = find_index(pixel_value)
     answer_key.append(index)
     x += 1  
-  # answer_key = np.hstack(answer_key)
-  # answer_key = np.hstack(answer_key)
   return answer_key[i]
+# print(get_answer(0)) #Work well
+
+def test_graded(img_index):
+  int(img_index)
+  graded = []
+  # char =[]
+  x = 1
+  while x < 13:
+    #Total_part
+    answer_index = [] 
+    image = crop_per_part(img_list[img_index],x)
+    thres = threshold_img(image)
+    boxes = split_image (thres)
+    pixel_value = check_answer(boxes)
+    index = find_index(pixel_value)
+    answer_index.append(index)
+    print(answer_index[0])
+    answer_key = get_answer(x-1)
+    # print(answer_key)
+    grade = grading(answer_index[0],answer_key)
+    graded.append(grade)
+    x +=1
+  graded = np.concatenate(graded)
+  score = score_show(graded)
+  return score
+
+test_graded(8)
 
 def process_chars(index):
   char = []
@@ -186,43 +157,17 @@ def process_chars(index):
         index[x] = chars[y]
   return index 
 
-def test_graded():
-  grade_ = []
-  char =[]
-  x = 1
-  while x < 13:
-    answer_index = []
-    thres = threshold_img(crop_per_part(img_list[4],x))
-    boxes = split_image (thres)
-    pixel_value = check_answer(boxes)
-    index = find_index(pixel_value)
-    answer_index.append(index)
-    char.append(process_chars(answer_index[0]))
-    # grade = grading(answer_index[0],get_answer(x-1))
-    # grade_.append(grade)
-    x +=1
-  # process_chars(answer_index)
-  # score = score_show(grade)
-  return char
-
-# print(get_answer(1))
-# img = cv2.imread('-VNUK-Challenge_2_HAO_UY/ANSWER/3A.png') 
-# cv2.imshow('answer',img)
-# cv2.waitKey(0)
-# boxes = split_image(threshold_img(crop_per_part(img_list[0]),1))
-# answer_check(crop_per_part(img_list[0],21))
-# show_images(['Part_1'], [threshold_img(crop_per_part(img_list[0],1))])
-
-# write_csv_file()
+########################################################################
+# add_dataframe()
 ########################################################################
 # Ex2: Create CSV file:
-write_csv_file()
+df_info = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
+# df_info.to_csv('student_INFO.csv')
 ########################################################################
 #Ex3: Generating the first 5 answers of one student:
 def first_five():
   char = []
-  
-  answer_index = []
+  answer_index = [] 
   thres = threshold_img(crop_per_part(img_list[0],1))
   boxes = split_image (thres)
   pixel_value = check_answer(boxes)
@@ -231,13 +176,12 @@ def first_five():
   char.append(process_chars(answer_index[0]))
   # grade = grading(answer_index[0],get_answer(1))
   # grade_.append(grade)
-  
   # answer_index = np.concatenate(answer_index)
   # grade = grading(answer_index,get_answer())
   # score = score_show(grade)
   print('The first 5 answers of the first student:')
   print(str(char))
-first_five()
+# first_five()
 ######################################################################## 
 # Ex4: Generating all answers of one student:
 def all_answer():
@@ -252,29 +196,105 @@ def all_answer():
     answer_index.append(index)
     char.append(process_chars(answer_index[0]))
     x +=1
-  char = np.concatenate(char)
+
   print('All answers of the first student:')
   print(str(char))
-all_answer()
+# all_answer()
 
-#################################
-# answer_index = []
-# thres = threshold_img(crop_per_part(img_list[0],1))
-# boxes = split_image (thres)
-# pixel_value = check_answer(boxes)
-# index = find_index(pixel_value)
-# answer_index.append(index)
-# grade = grading(answer_index[0],get_answer(0))
-# # grade = grading(answer_index,get_answer(0))
+######################################################################## 
+#Ex5: Generating grading.csv
+def correct_questions():
+  all_score = list()
+  for i in range (0,len(img_list)):     
+    all_score.append(test_graded(i))
+  return all_score  
 
+def grading_csv():
+  correct = correct_questions()
+  df_Score = pd.DataFrame({'Score':correct})
+  df_ID = pd.DataFrame({'Student ID':df_info['Student ID']})
+  frame = [df_ID,df_Score]
+  grading = pd.concat(frame,axis=1)
+  grading.to_csv('grading.csv')
+# grading_csv()
+########################################################################
+#Ex6: Summary which 3 questions are the most 
+def all_answer(img_index):
+  x = 1
+  answer_index = []
+  int(img_index)
+  while x < 13:
+    image = crop_per_part(img_list[img_index],x)
+    thres = threshold_img(image)
+    boxes = split_image (thres)
+    pixel_value = check_answer(boxes)
+    index = find_index(pixel_value)
+    answer_index.append(index)
+    x +=1
+  answer_index = np.concatenate(answer_index) 
+  return answer_index
+# print(all_answer(2)[1])
 
-    
-# # print(process_chars(answer_index[0]))
-# # print(process_chars(get_answer(0)))
-# # # print(grade)
-# # print(score_show(grade))
-# # print(test_graded())
-# print(test_graded())
+def get_answer_all():
+  answer = cv2.imread('-VNUK-Challenge_2_HAO_UY/ANSWER/3A.png')
+  answer_key = []
+  x = 1
+  while x < 13:
+    image = crop_per_part(answer,x)
+    thres = threshold_img(image)
+    boxes = split_image (thres)
+    pixel_value = check_answer(boxes)
+    index = find_index(pixel_value)
+    answer_key.append(index)
+    x += 1  
+  answer_key = np.concatenate(answer_key)
+  return answer_key   
 
-  
-  
+answer_key = get_answer_all()  
+
+def check_wrong(img_index):
+  diff = list()
+  for i in range (0,total_question):       
+    answer_index = all_answer(img_index)
+    if answer_key[i] != answer_index[i]:
+      diff.append(i)  
+  return diff       
+
+def print_diff():
+  total_wrong = list()
+  for i in range(0,len(img_list)):
+    total_wrong.append(check_wrong(i))
+  total_wrong = np.concatenate(total_wrong)
+  (counts,unique) = np.unique(total_wrong, return_counts=True)
+  unique.sort()
+  print(unique)
+print_diff() 
+########################################################################
+#Ex7: Generating the final result (pass/fail) of the class
+def conv_ques():
+  conv_correct_questions = [float(x) for x in correct_questions()]
+  return conv_correct_questions
+def final_result():
+  all_result = list()
+  correct = conv_ques()
+  for i in range (0,len(img_list)):
+    if correct[i]>8:
+      all_result.append('Pass')
+    else:
+      all_result.append('Fail')
+  return all_result
+
+def result_csv():
+  correct = correct_questions()
+  result = final_result()
+  df_Result = pd.DataFrame(result, columns=['Result'])
+  df_Score = pd.DataFrame({'Score':correct})
+  frame = [df_info, df_Score, df_Result]
+  df_final = pd.concat(frame,axis=1)
+  df_final.to_csv('Final Result.csv')
+# result_csv()
+img = crop_per_part(img_list[0],1) 
+boxes = split_image (img)
+# cv2.imshow('Test',img)
+cv2.imshow('image',img_list[8])
+cv2.waitKey(0)
