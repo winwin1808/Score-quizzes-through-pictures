@@ -5,29 +5,21 @@ import glob
 import imutils
 import numpy as np
 import os.path
-
+##################################
 chars = ['A', 'B', 'C', 'D', 'E']
 answer_per_question = 5 
 questions_per_part = 5
 total_parts = 12
 ques_each_side = 30
 total_question = 60
-
-
-green = (0, 255, 0) # green color
-red = (0, 0, 255) # red color
-white = (255, 255, 255) # white color
-
 width = 596
 height = 842
-
 #################################
 # Import data
 img_list = list()
 student_data_list = list()
-
-# images = glob.glob("DATA/*.png")
 images = [os.path.basename(x) for x in glob.glob("-VNUK-Challenge_2_HAO_UY/DATA/*.png")]
+
 for name in images: 
   img = cv2.imread('-VNUK-Challenge_2_HAO_UY/DATA/'+ name)
   img = cv2.resize(img, (width, height)) 
@@ -87,7 +79,6 @@ def check_answer(boxes):
 
 def find_index(myPixelVal):
   index = list()
-
   for x in range (0,questions_per_part):
     arr = myPixelVal[x]
     index_value = np.where(arr == np.amax(arr))
@@ -121,12 +112,10 @@ def get_answer(i):
     answer_key.append(index)
     x += 1  
   return answer_key[i]
-# print(get_answer(0)) #Work well
 
 def test_graded(img_index):
   int(img_index)
   graded = []
-  # char =[]
   x = 1
   while x < 13:
     #Total_part
@@ -137,17 +126,13 @@ def test_graded(img_index):
     pixel_value = check_answer(boxes)
     index = find_index(pixel_value)
     answer_index.append(index)
-    print(answer_index[0])
     answer_key = get_answer(x-1)
-    # print(answer_key)
     grade = grading(answer_index[0],answer_key)
     graded.append(grade)
     x +=1
   graded = np.concatenate(graded)
   score = score_show(graded)
   return score
-
-test_graded(8)
 
 def process_chars(index):
   char = []
@@ -157,8 +142,6 @@ def process_chars(index):
         index[x] = chars[y]
   return index 
 
-########################################################################
-# add_dataframe()
 ########################################################################
 # Ex2: Create CSV file:
 df_info = pd.DataFrame(student_data_list, columns=['Student ID','Name','Test Code'])
@@ -250,8 +233,8 @@ def get_answer_all():
   answer_key = np.concatenate(answer_key)
   return answer_key   
 
-answer_key = get_answer_all()  
-
+answer_key = get_answer_all() 
+ 
 def check_wrong(img_index):
   diff = list()
   for i in range (0,total_question):       
@@ -293,8 +276,4 @@ def result_csv():
   df_final = pd.concat(frame,axis=1)
   df_final.to_csv('Final Result.csv')
 # result_csv()
-img = crop_per_part(img_list[0],1) 
-boxes = split_image (img)
-# cv2.imshow('Test',img)
-cv2.imshow('image',img_list[8])
-cv2.waitKey(0)
+      
