@@ -14,11 +14,11 @@
 
 #**Libraries used in the code file:**
 
-*import cv2
-*import pandas as pd 
-*import matplotlib.pyplot as plt
-*import glob
-*import imutils
-*import numpy as np
-*import os.path
-*os.chdir("YOUR_PATH")
+* import cv2
+* import pandas as pd 
+* import matplotlib.pyplot as plt
+* import glob
+* import imutils
+* import numpy as np
+* import os.path
+* os.chdir("YOUR_PATH")
