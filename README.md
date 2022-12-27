@@ -1,4 +1,4 @@
-## -VNUK-Challenge_2_HAO_UY
+## -Score quizzes through pictures using CV2 library
 
 * **Ex2: From the Data folder, generating student.csv         -> student_INFO.csv**
 
