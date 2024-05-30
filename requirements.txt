@@ -1,0 +1,5 @@
+opencv-python-headless
+pandas
+glob2
+imutils
+numpy
