@@ -1,23 +1,64 @@
-# Score quizzes through pictures using CV2 library
+# Student Data Analysis Project
 
-* **Ex2: From the Data folder, generating student.csv         -> student_INFO.csv**
+This GitHub repository contains the necessary files for analyzing student data and determining their final results based on performance. The project transforms initial CSV data, processes image data, and utilizes Python scripts and Jupyter notebooks to present outcomes.
 
-* **Ex3: Generating grading.csv                               -> grading.csv**
+## Project Structure
 
-* **Ex4: Generating the final result (pass/fail) of the class -> Final Result.csv**
+```
+Project_Root/
+│
+├── DATA/
+│   └── (Images and data files)
+│
+├── ANSWER/
+│   └── (1 image related to answers)
+│
+├── CODE.py
+├── CODE.ipynb
+├── Final Result.csv
+├── README.md
+├── Test.py
+├── grading.csv
+└── student_INFO.csv
+```
 
-* **Code.py** is the file where we solve problems to get results.
+## Data Files
 
-* **Code.ipynb** is the file where we display the printed results.
+- **`student_INFO.csv`**
+  - Detailed information derived from initial student data.
+- **`grading.csv`**
+  - Contains grading criteria used to evaluate the students.
+- **`Final Result.csv`**
+  - Final result (Pass/Fail) for each student in the class.
 
-* **Test.py** is our file to transform image but it's not needed in this case.
+## Image Data
 
-## **Libraries used in the code file:**
+Images related to the students and project results are stored under the `DATA` and `ANSWER` folders.
 
-1. import cv2
-2. import pandas as pd 
-3. import glob
-4. import imutils
-5. import numpy as np
-6. import os.path
+## Scripts and Notebooks
 
+- **`CODE.py`**
+  - Python script for processing and analyzing data.
+- **`CODE.ipynb`**
+  - Jupyter Notebook for visual display of the processed results.
+- **`Test.py`**
+  - Additional testing scripts.
+
+## Libraries
+
+This project utilizes the following Python libraries:
+
+```python
+import cv2         # For image processing
+import pandas as pd  # For handling CSV data files
+import glob        # For retrieving file paths
+import imutils     # For image manipulation
+import numpy as np  # For numerical operations
+import os.path     # For path operations in the filesystem
+```
+
+## How to Run
+
+1. Install the necessary dependencies using `pip install -r requirements.txt`.
+2. Run `CODE.py` to process the data.
+3. Open `CODE.ipynb` in Jupyter Notebook or Lab to view the results.
