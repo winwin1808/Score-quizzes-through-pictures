@@ -2,6 +2,10 @@
 
 This GitHub repository contains the necessary files for analyzing student data and determining their final results based on performance. The project transforms initial CSV data, processes image data, and utilizes Python scripts and Jupyter notebooks to present outcomes.
 
+<p align="center">
+  <img src="DATA/20012322_DaoTien_3A.png" alt="20012322_DaoTien_3A">
+</p>
+
 ## Project Structure
 
 ```
